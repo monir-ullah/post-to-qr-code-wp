@@ -24,11 +24,11 @@ add_action('plugins_loaded', 'ptoqr_load_plugin_textdomain');
 function ptoqr_initial_func($content){
     $ptoqr_post_id = get_post();
     $ptoqr_post_url = get_permalink($ptoqr_post_id->ID);
-    $height = get_option( 'ptoqr_image_heigth' );
-    $width = get_option( 'ptoqr_image_width' );
-    $height = $height ? $height : 100;
-    $width = $width ? $width : 100;
-    $image_size = apply_filters( 'ptoqr_change_image_size', "{$width}x{$height}" );
+    $height_and_width = get_option( 'ptoqr_image_heigth_and_width' );
+   // $width = get_option( 'ptoqr_image_width' );
+    $height_and_width = $height_and_width ? $height_and_width : 100;
+   // $width = $width ? $width : 100;
+    $image_size = apply_filters( 'ptoqr_change_image_size', "{$height_and_width}x{$height_and_width}" );
     $img = '<img src = "https://api.qrserver.com/v1/create-qr-code/?size=' . $image_size .'&data=' . $ptoqr_post_url . '">';  
     return $content .= $img;
 
@@ -36,9 +36,9 @@ function ptoqr_initial_func($content){
 add_filter( 'the_content', 'ptoqr_initial_func' );
 
 function ptoqr_change_image_size_func($size){
-    $height = get_option( 'ptoqr_image_heigth' );
-    $width = get_option( 'ptoqr_image_width' );
-    $full_value = $width . 'x' . $height;
+    $ptoqr_image_heigth_and_width = get_option( 'ptoqr_image_heigth_and_width' );
+    //$width = get_option( 'ptoqr_image_heigth_and_width' );
+    $full_value = $ptoqr_image_heigth_and_width . 'x' . $ptoqr_image_heigth_and_width;
     echo $full_value;
     return $full_value;
 }
@@ -63,18 +63,19 @@ function ptoqr_setting_option(){
 
     // Setting Field Width
     add_settings_field( 
-        'ptoqr_image_width',
+        'ptoqr_image_heigth_and_width',
         __('QR Code Width ','ptoqr'),
         'ptoqr_setting_input_filed_function',
         'general',
         'ptoqr_seting_option_page',
-        array('ptoqr_image_width')
+        array('ptoqr_image_heigth_and_width')
     );
 
-    register_setting( 'general', 'ptoqr_image_width');
+    register_setting( 'general', 'ptoqr_image_heigth_and_width');
 
 
     // Setting Filed Height
+    /*
     add_settings_field( 
         'ptoqr_image_heigth',
         __('QR Code Hight','ptoqr'),
@@ -84,6 +85,7 @@ function ptoqr_setting_option(){
         array('ptoqr_image_heigth')
     );
     register_setting( 'general', 'ptoqr_image_heigth');
+    */
 }
 
 function atoqr_add_settings_section_title(){
@@ -95,6 +97,6 @@ function atoqr_add_settings_section_title(){
 
 function ptoqr_setting_input_filed_function($args){
     $filed_option = get_option( $args[0] );
-    printf('<input type="text" name="%s" id="%s" value="%s">',$args[0],$args[0], $filed_option );  
+    printf('<input type="number" name="%s" id="%s" value="%s">',$args[0],$args[0], $filed_option );  
 }
 
