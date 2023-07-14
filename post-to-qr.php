@@ -33,6 +33,7 @@ function ptoqr_initial_func($content){
 add_filter( 'the_content', 'ptoqr_initial_func' );
 
 function ptoqr_change_image_size_func($size){
+    echo "Hello World";
     return '150x150';
 }
 
