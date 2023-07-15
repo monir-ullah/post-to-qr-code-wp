@@ -19,6 +19,26 @@ function ptoqr_load_plugin_textdomain(){
 }
 add_action('plugins_loaded', 'ptoqr_load_plugin_textdomain');
 
+// admin enqueue script / style
+
+
+function ptoqr_admin_enqueue_script($page){
+   
+    if('options-general.php' == $page){
+
+       // wp_enqueue_style( 'ptoqr_toggle_style', plugin_dir_url( __FILE__ ) . '/assets/css/style.css');
+        wp_enqueue_style( 'ptoqr_toggle_minitoggle-css', plugin_dir_url( __FILE__ ) . '/assets/css/minitoggle.css');
+
+
+        wp_enqueue_script( 'ptoqr_toggle_minitoggle_js', plugin_dir_url( __FILE__ ) . '/assets/js/minitoggle.js', array('jquery'),'1.0.2',true );
+        wp_enqueue_script( 'ptoqr_toggle_script', plugin_dir_url( __FILE__ ) . '/assets/js/script.js', array('jquery'),'1.0.1',true );
+        wp_enqueue_script( 'ptoqr_toggle_main_js', plugin_dir_url( __FILE__ ) . '/assets/js/toggle-main.js', array('jquery'), time(),true );
+    } 
+}
+
+add_action( 'admin_enqueue_scripts', 'ptoqr_admin_enqueue_script' );
+
+
 // Country List
 $ptoqr_country_list = array(
 
@@ -117,6 +137,18 @@ function ptoqr_setting_option(){
 
     register_setting( 'general', 'ptoqr_country_checkbox' );
 
+    // Setting Toggle  Option
+
+    add_settings_field( 
+        'pqrc_toggle',
+        __('Toggle Option'),
+        'ptoqr_toggle_func',
+        'general',
+        'ptoqr_seting_option_page', 
+    );
+
+    register_setting( 'general', 'pqrc_toggle' );
+
     // Setting Filed Height
     /*
     add_settings_field( 
@@ -135,6 +167,15 @@ function atoqr_add_settings_section_title_func(){
     echo "Post to QR Code All Settings Here";
 }
 
+
+// Toggle Function
+
+function ptoqr_toggle_func(){
+    $option = get_option('pqrc_toggle');
+    echo '<div id="toggle"></div>';
+
+  //  echo "<input type='hidden' name='pqrc_toggle' id='pqrc_toggle' value='".$option."'/>";
+}
 
 // Settings Input Field Funcwtion
 
